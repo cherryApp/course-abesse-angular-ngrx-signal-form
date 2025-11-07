@@ -12,9 +12,7 @@ export const routes: Routes = [
   {
     path: 'users/create',
     loadComponent: () =>
-      import('./page/user-creator.component/user-creator.component').then(
-        (m) => m.UserCreatorComponent
-      ),
+      import('./page/user-create/user-create').then((m) => m.UserCreateComponent),
   },
   {
     path: 'users/edit/:id',

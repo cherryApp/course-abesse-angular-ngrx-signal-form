@@ -29,7 +29,7 @@ export class UserEditorComponent {
 
   user = linkedSignal<User>(() => {
     const selectedUser = this.userStore.selectedUser();
-    return selectedUser ? { ...selectedUser } : { id: 0, name: '', category: 'guest', email: '' };
+    return selectedUser ?? { id: 0, name: '', category: 'guest', email: '' };
   });
 
   errorMessage = this.userStore.error;

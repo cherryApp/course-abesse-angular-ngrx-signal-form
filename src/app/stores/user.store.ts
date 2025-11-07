@@ -63,6 +63,17 @@ export const UserStore = signalStore(
         patchState(store, { loading: false });
       }
     },
+    async createUser(user: User) {
+      patchState(store, { loading: true, error: null });
+      try {
+        const createdUser = await firstValueFrom(userService.createUser(user));
+        patchState(store, { users: [...store.users(), createdUser] });
+      } catch (e) {
+        patchState(store, { error: String(e) });
+      } finally {
+        patchState(store, { loading: false });
+      }
+    },
   })),
   withComputed((store) => ({
     userCount: () => store.users().length,
