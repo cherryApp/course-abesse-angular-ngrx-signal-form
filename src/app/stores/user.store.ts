@@ -25,10 +25,38 @@ export const UserStore = signalStore(
         return;
       }
 
-      patchState(store, { loading: true });
+      patchState(store, { loading: true, error: null });
       try {
         const users = await firstValueFrom(userService.getUsers());
         patchState(store, { users });
+      } catch (e) {
+        patchState(store, { error: String(e) });
+      } finally {
+        patchState(store, { loading: false });
+      }
+    },
+    async loadOneUser(id: number) {
+      patchState(store, { loading: true, error: null });
+      try {
+        const selectedUser = await firstValueFrom(userService.getUser(id));
+        patchState(store, { selectedUser });
+      } catch (e) {
+        patchState(store, { error: String(e) });
+      } finally {
+        patchState(store, { loading: false });
+      }
+    },
+    async updateUser(user: User) {
+      patchState(store, { loading: true, error: null });
+      try {
+        const updatedUser = await firstValueFrom(userService.updateUser(user.id, user));
+        const index = store.users().findIndex((u) => u.id === updatedUser.id);
+        if (index !== -1) {
+          const users = [...store.users()];
+          users[index] = updatedUser;
+          patchState(store, { users });
+        }
+        // patchState(store, { users: store.users().map((u) => (u.id === updatedUser.id ? updatedUser : u)) });
       } catch (e) {
         patchState(store, { error: String(e) });
       } finally {
